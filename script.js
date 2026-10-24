@@ -62,7 +62,12 @@ async function processWithCloudOCR(base64Image) {
     if (data.IsErroredOnProcessing) throw new Error(data.ErrorMessage);
 
     const rawText = data.ParsedResults[0].ParsedText;
+    console.log(rawText);
 
+    // 1. Name Extraction (Added broken vertical fallback for missing colons)
+    const brokenVerticalMatch = rawText.match(
+      /Customer[\s\S]*?[（(]?\d{3}[)）]?[\s.-]?\d{3}[\s.-]?\d{4}[\s\S]*?:\s*([a-zA-Z '-]+)/i,
+    );
     const verticalMatch = rawText.match(
       /Customer[\s\S]*?:\s*[()\d\-\s]+[\r\n]+\s*:\s*([a-zA-Z '-]+)/i,
     );
@@ -74,7 +79,8 @@ async function processWithCloudOCR(base64Image) {
     );
 
     let name = "Name not found";
-    if (verticalMatch) name = verticalMatch[1].trim();
+    if (brokenVerticalMatch) name = brokenVerticalMatch[1].trim();
+    else if (verticalMatch) name = verticalMatch[1].trim();
     else if (stackedMatch) name = stackedMatch[1].trim();
     else if (
       horizontalMatch &&
@@ -82,11 +88,17 @@ async function processWithCloudOCR(base64Image) {
     )
       name = horizontalMatch[1].trim();
 
-    const phoneMatch = rawText.match(/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
-    const phone = phoneMatch ? phoneMatch[0] : "Phone not found";
+    // 2. Phone Extraction (Supports full-width unicode parentheses and normalizes them)
+    const phoneMatch = rawText.match(
+      /[（(]?\d{3}[)）]?[\s.-]?\d{3}[\s.-]?\d{4}/,
+    );
+    const phone = phoneMatch
+      ? phoneMatch[0].replace(/（/g, "(").replace(/）/g, ")")
+      : "Phone not found";
 
+    // 3. Address Extraction (Forces the capture to continue until it finds a State + Zip boundary like "NY 11420")
     const addressMatch = rawText.match(
-      /Address\s*:[\s\S]*?(?=\d)([\s\S]*?\b\d{5}\b)/i,
+      /Address\s*:?[\s\S]*?(?=\d)([\s\S]*?\b[A-Za-z]{2}\s*\d{5}\b)/i,
     );
     const address = addressMatch
       ? addressMatch[1]
