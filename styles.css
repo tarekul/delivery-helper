@@ -1,0 +1,164 @@
+:root {
+  --pj-red: #df1a22;
+  --pj-green: #005f32;
+  --pj-dark: #333333;
+  --bg: #f4f4f5;
+}
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--pj-dark);
+}
+header {
+  background-color: var(--pj-red);
+  color: white;
+  padding: 16px;
+  text-align: center;
+}
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+main {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+.text-center {
+  text-align: center;
+}
+
+/* Modern Text Inputs */
+input[type="text"],
+input[type="tel"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  margin-top: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+}
+input[type="text"]:focus,
+input[type="tel"]:focus {
+  outline: none;
+  border-color: var(--pj-red);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(223, 26, 34, 0.15);
+}
+
+/* Custom Camera Button */
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-top: 16px;
+  background-color: #fffafb;
+  border: 2px dashed var(--pj-red);
+  border-radius: 8px;
+  color: var(--pj-red);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.2s;
+}
+.custom-file-upload:active {
+  background-color: #fce8e9;
+}
+#status {
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Standard Buttons */
+button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin-top: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  background-color: var(--pj-red);
+  color: white;
+}
+button:active {
+  opacity: 0.8;
+}
+.btn-green {
+  background-color: var(--pj-green);
+}
+.btn-dark {
+  background-color: var(--pj-dark);
+}
+
+/* Queue Grid */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  ul {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+li {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.order-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.order-actions button {
+  margin-top: 0;
+  padding: 10px;
+}
+
+/* Navigation Buttons */
+.btn-google {
+  background-color: #4285f4;
+  color: white;
+}
+.btn-waze {
+  background-color: #05c8f1;
+  color: white;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Call Button */
+.btn-call {
+  background-color: transparent;
+  color: var(--pj-dark);
+  border: 2px solid var(--pj-dark);
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+.btn-call:active {
+  background-color: var(--pj-dark);
+  color: white;
+}

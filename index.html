@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Scanner</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Delivery Routing</h1>
+    </header>
+    <main>
+      <div class="card text-center">
+        <strong>Scan Receipt</strong>
+        <!-- Hides the default input and uses a styled label as the button -->
+        <label for="cameraInput" class="custom-file-upload">
+          📷 Open Camera & Scan
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          id="cameraInput"
+        />
+        <p id="status">Waiting for image...</p>
+      </div>
+
+      <div class="card">
+        <strong>Manual Entry</strong>
+        <input type="text" id="manualName" placeholder="Customer Name" />
+        <input type="tel" id="manualPhone" placeholder="Phone Number" />
+        <input type="text" id="manualAddress" placeholder="Full Address" />
+        <button id="addManualBtn" class="btn-green">Add Delivery</button>
+      </div>
+
+      <button class="btn-dark" onclick="window.location.href = 'orders.html'">
+        View Active Orders
+      </button>
+    </main>
+  </body>
+</html>
