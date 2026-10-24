@@ -35,7 +35,7 @@ h1 {
   font-size: 24px;
 }
 main {
-  flex: 1; /* Automatically fills all available space below the header */
+  flex: 1;
   padding: 16px;
   max-width: 800px;
   width: 100%;
@@ -43,7 +43,8 @@ main {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers your scanner and inputs vertically */
+  justify-content: flex-start; /* Changed from center so orders align at the top */
+  overflow-y: auto; /* Enables vertical scrolling for the order list */
 }
 .card {
   background: white;
