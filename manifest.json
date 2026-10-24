@@ -1,0 +1,20 @@
+{
+  "name": "Papa Route",
+  "short_name": "Papa Route",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f4f5",
+  "theme_color": "#df1a22",
+  "icons": [
+    {
+      "src": "logo192.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "logo512.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
