@@ -34,11 +34,11 @@ function renderOrders() {
           📞 Call
         </button>
         
-        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-          <button class="btn-google" onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.address)}', '_blank')">
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <button class="btn-google" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.address)}'">
             📍 Google Maps
           </button>
-          <button class="btn-waze" onclick="window.open('https://waze.com/ul?q=${encodeURIComponent(order.address)}&navigate=yes', '_blank')">
+          <button class="btn-waze" onclick="window.location.href='https://waze.com/ul?q=${encodeURIComponent(order.address)}&navigate=yes'">
             🚙 Waze
           </button>
         </div>
