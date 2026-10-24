@@ -9,6 +9,10 @@ body {
   margin: 0;
   background-color: var(--bg);
   color: var(--pj-dark);
+  height: 100dvh; /* Matches exact mobile screen height, accounting for address bars */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Completely disables page scrolling */
 }
 header {
   background-color: var(--pj-red);
@@ -21,9 +25,15 @@ h1 {
   font-size: 24px;
 }
 main {
-  padding: 20px;
+  flex: 1; /* Automatically fills all available space below the header */
+  padding: 16px;
   max-width: 800px;
-  margin: auto;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers your scanner and inputs vertically */
 }
 .card {
   background: white;
@@ -161,4 +171,32 @@ li {
 .btn-call:active {
   background-color: var(--pj-dark);
   color: white;
+}
+
+/* Compress vertical spacing for shorter screens like iPhone SE */
+@media (max-height: 700px) {
+  main {
+    padding: 12px;
+    justify-content: space-evenly; /* Distributes available space automatically */
+  }
+  .card {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .custom-file-upload {
+    padding: 14px;
+    margin-top: 12px;
+  }
+  input[type="text"],
+  input[type="tel"] {
+    padding: 12px 16px;
+    margin-top: 8px;
+  }
+  button {
+    padding: 12px;
+    margin-top: 12px;
+  }
+  #status {
+    margin-top: 8px;
+  }
 }
