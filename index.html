@@ -41,12 +41,70 @@
         <input type="text" id="manualName" placeholder="Customer Name" />
         <input type="tel" id="manualPhone" placeholder="Phone Number" />
         <input type="text" id="manualAddress" placeholder="Full Address" />
+        <!-- Manual Entry Options -->
+        <div class="payment-toggle">
+          <input
+            type="radio"
+            id="manualCash"
+            name="manualPayment"
+            value="Cash"
+          />
+          <label for="manualCash">💵 Cash</label>
+          <input
+            type="radio"
+            id="manualCredit"
+            name="manualPayment"
+            value="Credit"
+          />
+          <label for="manualCredit">💳 Credit</label>
+        </div>
+        <div class="priority-toggle">
+          <input type="checkbox" id="manualPriority" />
+          <label for="manualPriority">⚠️ Running Late (Prioritize)</label>
+        </div>
         <button id="addManualBtn" class="btn-green">Add Delivery</button>
       </div>
 
-      <button class="btn-dark" onclick="window.location.href = 'orders.html'">
+      <button
+        class="btn-outline btn-view-orders"
+        onclick="window.location.href = 'orders.html'"
+      >
         View Active Orders
       </button>
     </main>
+
+    <div id="reviewModal" class="modal hidden">
+      <div class="card modal-content">
+        <strong>Review Scanned Order</strong>
+        <input type="text" id="reviewName" placeholder="Customer Name" />
+        <input type="tel" id="reviewPhone" placeholder="Phone Number" />
+        <input type="text" id="reviewAddress" placeholder="Full Address" />
+        <!-- Review Modal Options -->
+        <div class="payment-toggle">
+          <input
+            type="radio"
+            id="reviewCash"
+            name="reviewPayment"
+            value="Cash"
+          />
+          <label for="reviewCash">💵 Cash</label>
+          <input
+            type="radio"
+            id="reviewCredit"
+            name="reviewPayment"
+            value="Credit"
+          />
+          <label for="reviewCredit">💳 Credit</label>
+        </div>
+        <div class="priority-toggle">
+          <input type="checkbox" id="reviewPriority" />
+          <label for="reviewPriority">⚠️ Running Late (Prioritize)</label>
+        </div>
+        <div class="order-actions">
+          <button id="confirmReviewBtn" class="btn-green">Confirm</button>
+          <button id="cancelReviewBtn" class="btn-dark">Cancel</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

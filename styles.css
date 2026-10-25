@@ -37,7 +37,7 @@ h1 {
 main {
   flex: 1;
   padding: 16px;
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
   box-sizing: border-box;
   margin: 0 auto;
@@ -127,9 +127,6 @@ button:active {
 .btn-green {
   background-color: var(--pj-green);
 }
-.btn-dark {
-  background-color: var(--pj-dark);
-}
 
 /* Queue Grid */
 ul {
@@ -141,7 +138,7 @@ ul {
 }
 @media (min-width: 768px) {
   ul {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   }
 }
 li {
@@ -184,11 +181,151 @@ li {
   color: white;
 }
 
+/* Modal Overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none !important;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 450px;
+  margin: 0;
+}
+
+/* Payment & Priority Toggles */
+.payment-toggle {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.payment-toggle input[type="radio"],
+.priority-toggle input[type="checkbox"] {
+  display: none; /* Hide default inputs */
+}
+.payment-toggle label,
+.priority-toggle label {
+  flex: 1;
+  display: block;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fafafa;
+  color: var(--pj-dark);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.priority-toggle {
+  margin-top: 12px;
+}
+/* Selected States */
+.payment-toggle input[type="radio"]:checked + label {
+  background: var(--pj-red);
+  color: white;
+  border-color: var(--pj-red);
+}
+.priority-toggle input[type="checkbox"]:checked + label {
+  background: #fbbf24; /* Warning Amber */
+  color: #000;
+  border-color: #f59e0b;
+}
+
+/* Dynamic scaling for order details */
+.dynamic-text {
+  font-size: clamp(11px, 3.6vw, 16px);
+  margin-bottom: 12px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* Empty Queue State */
+.empty-state {
+  text-align: center;
+  margin-top: 60px;
+  padding: 20px;
+}
+
+/* Empty Queue State */
+/* Empty Queue State */
+.empty-state {
+  text-align: center;
+  margin-top: 10vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-column: 1 / -1;
+}
+
+.empty-state img {
+  width: clamp(140px, 20vw, 220px);
+  height: auto;
+  margin-bottom: 24px;
+  opacity: 0.6;
+  filter: grayscale(100%);
+  mix-blend-mode: multiply;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px 0;
+  color: var(--pj-dark);
+  font-size: 22px;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* Compact Back Button */
+.btn-back {
+  width: fit-content;
+  padding: 10px 24px;
+  margin-top: 0;
+}
+
+/* Branded Navigation Buttons */
+.btn-outline {
+  background-color: transparent;
+  color: var(--pj-red);
+  border: 2px solid var(--pj-red);
+  transition: all 0.2s ease;
+}
+
+.btn-outline:active {
+  background-color: var(--pj-red);
+  color: white;
+}
+
+/* Compact and Center the View Orders Button */
+.btn-view-orders {
+  width: fit-content;
+  margin: 24px auto 0 auto; /* Centers the button horizontally */
+  padding: 14px 32px;
+  display: block;
+}
+
 /* Compress vertical spacing for shorter screens like iPhone SE */
 @media (max-height: 700px) {
   main {
     padding: 12px;
-    justify-content: space-evenly; /* Distributes available space automatically */
+    justify-content: flex-start;
   }
   .card {
     padding: 16px;

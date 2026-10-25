@@ -12,20 +12,40 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   const phone = document.getElementById("manualPhone").value.trim();
   const address = document.getElementById("manualAddress").value.trim();
 
+  // Get payment and priority
+  const paymentNode = document.querySelector(
+    'input[name="manualPayment"]:checked',
+  );
+  const paymentType = paymentNode ? paymentNode.value : null;
+  const isPriority = document.getElementById("manualPriority").checked;
+
   if (!name && !phone && !address) return alert("Enter at least one detail.");
 
-  orders.push({ name, phone, address, isEditing: false });
+  orders.push({
+    name,
+    phone,
+    address,
+    paymentType,
+    isPriority,
+    isEditing: false,
+  });
   saveState();
 
+  // Reset inputs
   document.getElementById("manualName").value = "";
   document.getElementById("manualPhone").value = "";
   document.getElementById("manualAddress").value = "";
+  if (paymentNode) paymentNode.checked = false;
+  document.getElementById("manualPriority").checked = false;
+
   s.textContent = "Manual order added to queue.";
 });
 
 input.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
+
+  e.target.value = "";
 
   s.textContent = "Compressing Image...";
 
@@ -107,10 +127,43 @@ async function processWithCloudOCR(base64Image) {
           .trim()
       : "Address not found";
 
-    orders.push({ name, phone, address, isEditing: false });
-    saveState();
-    s.textContent = "Order added to queue.";
+    document.getElementById("reviewName").value = name;
+    document.getElementById("reviewPhone").value = phone;
+    document.getElementById("reviewAddress").value = address;
+
+    document
+      .querySelectorAll('input[name="reviewPayment"]')
+      .forEach((n) => (n.checked = false));
+    document.getElementById("reviewPriority").checked = false;
+    document.getElementById("reviewModal").classList.remove("hidden");
+    s.textContent = "Review scanned details.";
   } catch (error) {
     s.textContent = "API Error. Check console.";
   }
 }
+
+document.getElementById("confirmReviewBtn").addEventListener("click", () => {
+  const name = document.getElementById("reviewName").value.trim();
+  const phone = document.getElementById("reviewPhone").value.trim();
+  const address = document.getElementById("reviewAddress").value.trim();
+
+  // Get payment and priority
+  const paymentNode = document.querySelector(
+    'input[name="reviewPayment"]:checked',
+  );
+  const paymentType = paymentNode ? paymentNode.value : null;
+  const isPriority = document.getElementById("reviewPriority").checked;
+
+  orders.push({
+    name,
+    phone,
+    address,
+    paymentType,
+    isPriority,
+    isEditing: false,
+  });
+  saveState();
+
+  document.getElementById("reviewModal").classList.add("hidden");
+  document.getElementById("status").textContent = "Order added to queue.";
+});
