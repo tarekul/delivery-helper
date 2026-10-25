@@ -48,13 +48,41 @@ main {
 }
 .card {
   background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 24px; /* Increased padding for breathing room */
+  border-radius: 16px; /* Softer, modern corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   margin-bottom: 24px;
+  max-width: 600px; /* Prevents exhausting line lengths on desktop */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 .text-center {
   text-align: center;
+}
+
+.section-title {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--pj-dark);
+}
+
+/* Input Groups & Icons */
+.input-group {
+  position: relative;
+  margin-top: 12px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  pointer-events: none; /* Prevents icon from blocking clicks */
+  opacity: 0.7;
 }
 
 /* Modern Text Inputs */
@@ -62,20 +90,45 @@ input[type="text"],
 input[type="tel"] {
   width: 100%;
   box-sizing: border-box;
-  padding: 14px 16px;
-  margin-top: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  padding: 16px 16px 16px 46px; /* Extra left padding for the icon */
+  border: 1px solid #e5e7eb; /* Softer, lighter border */
+  border-radius: 12px;
   font-size: 16px;
-  background-color: #fafafa;
+  background-color: #f9fafb; /* Subtle light gray background */
   transition: all 0.2s ease;
 }
+
 input[type="text"]:focus,
 input[type="tel"]:focus {
   outline: none;
   border-color: var(--pj-red);
   background-color: white;
-  box-shadow: 0 0 0 3px rgba(223, 26, 34, 0.15);
+  box-shadow: 0 0 0 4px rgba(223, 26, 34, 0.1); /* Softer, larger focus ring */
+}
+
+/* Pill Button for Camera */
+.custom-file-upload.pill-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: var(--pj-red);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(223, 26, 34, 0.25);
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.custom-file-upload.pill-btn:active {
+  transform: translateY(2px);
+  box-shadow: none;
+  background-color: #c8161d;
 }
 
 /* Custom Camera Button */
@@ -215,6 +268,13 @@ li {
 .priority-toggle input[type="checkbox"] {
   display: none; /* Hide default inputs */
 }
+
+.payment-toggle label:hover,
+.priority-toggle label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
 .payment-toggle label,
 .priority-toggle label {
   flex: 1;

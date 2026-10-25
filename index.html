@@ -21,11 +21,11 @@
       <h1>Papa Route</h1>
     </header>
     <main>
-      <div class="card text-center">
-        <strong>Scan Receipt</strong>
-        <!-- Hides the default input and uses a styled label as the button -->
-        <label for="cameraInput" class="custom-file-upload">
-          📷 Open Camera & Scan
+      <div class="card">
+        <strong class="section-title">Scan Receipt</strong>
+        <!-- Pill-shaped primary action button -->
+        <label for="cameraInput" class="custom-file-upload pill-btn">
+          📸 Open Camera & Scan
         </label>
         <input
           type="file"
@@ -37,10 +37,20 @@
       </div>
 
       <div class="card">
-        <strong>Manual Entry</strong>
-        <input type="text" id="manualName" placeholder="Customer Name" />
-        <input type="tel" id="manualPhone" placeholder="Phone Number" />
-        <input type="text" id="manualAddress" placeholder="Full Address" />
+        <strong class="section-title">Manual Entry</strong>
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="manualName" placeholder="Customer Name" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📞</span>
+          <input type="tel" id="manualPhone" placeholder="Phone Number" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📍</span>
+          <input type="text" id="manualAddress" placeholder="Full Address" />
+        </div>
+
         <!-- Manual Entry Options -->
         <div class="payment-toggle">
           <input
@@ -62,6 +72,7 @@
           <input type="checkbox" id="manualPriority" />
           <label for="manualPriority">⚠️ Running Late (Prioritize)</label>
         </div>
+
         <button id="addManualBtn" class="btn-green">Add Delivery</button>
       </div>
 
@@ -75,10 +86,20 @@
 
     <div id="reviewModal" class="modal hidden">
       <div class="card modal-content">
-        <strong>Review Scanned Order</strong>
-        <input type="text" id="reviewName" placeholder="Customer Name" />
-        <input type="tel" id="reviewPhone" placeholder="Phone Number" />
-        <input type="text" id="reviewAddress" placeholder="Full Address" />
+        <strong class="section-title">Review Scanned Order</strong>
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="reviewName" placeholder="Customer Name" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📞</span>
+          <input type="tel" id="reviewPhone" placeholder="Phone Number" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📍</span>
+          <input type="text" id="reviewAddress" placeholder="Full Address" />
+        </div>
+
         <!-- Review Modal Options -->
         <div class="payment-toggle">
           <input
@@ -100,6 +121,7 @@
           <input type="checkbox" id="reviewPriority" />
           <label for="reviewPriority">⚠️ Running Late (Prioritize)</label>
         </div>
+
         <div class="order-actions">
           <button id="confirmReviewBtn" class="btn-green">Confirm</button>
           <button id="cancelReviewBtn" class="btn-dark">Cancel</button>
