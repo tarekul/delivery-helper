@@ -167,3 +167,8 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
   document.getElementById("reviewModal").classList.add("hidden");
   document.getElementById("status").textContent = "Order added to queue.";
 });
+
+document.getElementById("cancelReviewBtn").addEventListener("click", () => {
+  document.getElementById("reviewModal").classList.add("hidden");
+  document.getElementById("status").textContent = "Scan cancelled.";
+});
