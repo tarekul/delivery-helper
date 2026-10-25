@@ -403,7 +403,7 @@ li {
   }
   input[type="text"],
   input[type="tel"] {
-    padding: 12px 16px;
+    padding: 12px 16px 12px 46px;
     margin-top: 8px;
   }
   button {
