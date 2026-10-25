@@ -83,25 +83,29 @@ main {
 
 .input-icon {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px;
-  pointer-events: none; /* Prevents icon from blocking clicks */
-  opacity: 0.7;
+  font-size: 16px;
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0.8;
+  z-index: 2;
 }
 
-/* Modern Text Inputs */
 input[type="text"],
 input[type="tel"] {
+  position: relative;
   width: 100%;
   box-sizing: border-box;
-  padding: 16px 16px 16px 46px; /* Extra left padding for the icon */
-  border: 1px solid #e5e7eb; /* Softer, lighter border */
-  border-radius: 12px;
+  padding: 14px 16px 14px 44px;
+  margin-top: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   font-size: 16px;
-  background-color: #f9fafb; /* Subtle light gray background */
+  background-color: #fafafa;
   transition: all 0.2s ease;
+  z-index: 1;
 }
 
 input[type="text"]:focus,
