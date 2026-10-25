@@ -406,7 +406,32 @@ li {
   display: block;
 }
 
-/* Compress vertical spacing for shorter screens like iPhone SE */
+.btn-icon {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 8px;
+  border-radius: 8px;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-icon:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-icon:not(:disabled):active {
+  background: #f3f4f6;
+  color: var(--pj-dark);
+  border-color: #9ca3af;
+}
+
 @media (max-height: 700px) {
   main {
     padding: 12px;

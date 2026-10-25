@@ -61,7 +61,15 @@ function renderOrders() {
 
       li.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <strong style="font-size: 18px;">Order ${index + 1}</strong>
+          <strong style="font-size: 18px; color: var(--pj-red);">Stop ${index + 1}</strong>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-icon" onclick="moveOrder(${index}, -1)" ${index === 0 ? "disabled" : ""}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </button>
+            <button class="btn-icon" onclick="moveOrder(${index}, 1)" ${index === orders.length - 1 ? "disabled" : ""}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </button>
+          </div>
         </div>
         
         ${badgesHTML}
@@ -102,9 +110,46 @@ function renderOrders() {
   });
 }
 
+window.moveOrder = (index, direction) => {
+  const newIndex = index + direction;
+  if (newIndex >= 0 && newIndex < orders.length) {
+    const temp = orders[index];
+    orders[index] = orders[newIndex];
+    orders[newIndex] = temp;
+    saveState(); // Saves the new order and re-renders
+  }
+};
+
 window.removeOrder = (index) => {
   orders.splice(index, 1);
   saveState();
+
+  if (orders.length > 0) {
+    const nextStop = orders[0];
+    const modal = document.getElementById("navModal");
+
+    // Inject the next address into the modal
+    document.getElementById("navAddress").textContent = nextStop.address;
+
+    // Route to Google Maps
+    document.getElementById("navGoogleBtn").onclick = () => {
+      window.location.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(nextStop.address)}`;
+      closeNavModal();
+    };
+
+    // Route to Waze
+    document.getElementById("navWazeBtn").onclick = () => {
+      window.location.href = `https://waze.com/ul?q=${encodeURIComponent(nextStop.address)}&navigate=yes`;
+      closeNavModal();
+    };
+
+    // Display the modal
+    modal.classList.remove("hidden");
+  }
+};
+
+window.closeNavModal = () => {
+  document.getElementById("navModal").classList.add("hidden");
 };
 
 window.toggleEdit = (index) => {

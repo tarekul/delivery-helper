@@ -30,5 +30,37 @@
       </div>
       <ul id="orderList"></ul>
     </main>
+    <!-- Custom Navigation Modal -->
+    <div id="navModal" class="modal hidden">
+      <div class="card modal-content" style="text-align: center">
+        <h2 style="margin-top: 0; color: var(--pj-dark)">Delivery Complete!</h2>
+        <p style="color: #6b7280; margin-bottom: 8px">Navigate to next stop?</p>
+        <strong
+          id="navAddress"
+          style="
+            display: block;
+            margin-bottom: 24px;
+            font-size: 18px;
+            color: var(--pj-red);
+          "
+        ></strong>
+
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <button id="navGoogleBtn" class="btn-google" style="margin-top: 0">
+            📍 Google Maps
+          </button>
+          <button id="navWazeBtn" class="btn-waze" style="margin-top: 0">
+            🚙 Waze
+          </button>
+          <button
+            class="btn-dark"
+            style="margin-top: 0"
+            onclick="closeNavModal()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
