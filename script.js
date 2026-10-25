@@ -11,6 +11,7 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   const name = document.getElementById("manualName").value.trim();
   const phone = document.getElementById("manualPhone").value.trim();
   const address = document.getElementById("manualAddress").value.trim();
+  const total = document.getElementById("manualTotal").value.trim(); // U
 
   // Get payment and priority
   const paymentNode = document.querySelector(
@@ -25,6 +26,7 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
     name,
     phone,
     address,
+    total,
     paymentType,
     isPriority,
     isEditing: false,
@@ -127,6 +129,15 @@ async function processWithCloudOCR(base64Image) {
           .trim()
       : "Address not found";
 
+    // 4. Total Extraction
+    const totalMatch = rawText.match(/\bTotal\s*:\s*[\s\S]*?(\d+\.\d{2})/i);
+    const total = totalMatch ? totalMatch[1] : "";
+
+    document.getElementById("reviewName").value = name;
+    document.getElementById("reviewPhone").value = phone;
+    document.getElementById("reviewAddress").value = address;
+    document.getElementById("reviewTotal").value = total;
+
     document.getElementById("reviewName").value = name;
     document.getElementById("reviewPhone").value = phone;
     document.getElementById("reviewAddress").value = address;
@@ -146,6 +157,7 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
   const name = document.getElementById("reviewName").value.trim();
   const phone = document.getElementById("reviewPhone").value.trim();
   const address = document.getElementById("reviewAddress").value.trim();
+  const total = document.getElementById("reviewTotal").value.trim();
 
   // Get payment and priority
   const paymentNode = document.querySelector(
@@ -158,6 +170,7 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
     name,
     phone,
     address,
+    total,
     paymentType,
     isPriority,
     isEditing: false,

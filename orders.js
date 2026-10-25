@@ -24,6 +24,7 @@ function renderOrders() {
         <input type="text" id="editName${index}" class="edit-input" value="${order.name || ""}">
         <input type="tel" id="editPhone${index}" class="edit-input" value="${order.phone || ""}">
         <input type="text" id="editAddress${index}" class="edit-input" value="${order.address || ""}">
+        <input type="number" step="0.01" id="editTotal${index}" class="edit-input" value="${order.total || ""}">
         
         <div class="payment-toggle">
           <input type="radio" id="editCash${index}" name="editPayment${index}" value="Cash" ${order.paymentType === "Cash" ? "checked" : ""}>
@@ -74,6 +75,9 @@ function renderOrders() {
         <div class="dynamic-text" style="margin-bottom: 20px;">
           <strong>Address:</strong> ${order.address}
         </div>
+        <div class="dynamic-text" style="margin-bottom: 20px;">
+          <strong>Total:</strong> $${order.total || "0.00"}
+        </div>
         
         <button class="btn-call" style="margin-bottom: 16px;" onclick="window.location.href='tel:${order.phone.replace(/\D/g, "")}'">
           📞 Call
@@ -120,6 +124,9 @@ window.saveEdit = (index) => {
     .value.trim();
   orders[index].address = document
     .getElementById(`editAddress${index}`)
+    .value.trim();
+  orders[index].total = document
+    .getElementById(`editTotal${index}`)
     .value.trim();
 
   const paymentNode = document.querySelector(
