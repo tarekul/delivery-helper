@@ -9,7 +9,7 @@ body {
   margin: 0;
   background-color: var(--bg);
   background-image:
-    linear-gradient(rgba(244, 244, 245, 0.9), rgba(244, 244, 245, 0.9)),
+    linear-gradient(rgba(244, 244, 245, 0.8), rgba(244, 244, 245, 0.9)),
     url("pizza-bg.jpeg");
   background-size: cover;
   background-position: center;
@@ -52,13 +52,17 @@ main {
   justify-content: flex-start; /* Changed from center so orders align at the top */
   overflow-y: auto; /* Enables vertical scrolling for the order list */
 }
+/* Centered Cards with Frosted Glass Effect */
 .card {
-  background: white;
-  padding: 24px; /* Increased padding for breathing room */
-  border-radius: 16px; /* Softer, modern corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
   margin-bottom: 24px;
-  max-width: 600px; /* Prevents exhausting line lengths on desktop */
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
