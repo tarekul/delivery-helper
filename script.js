@@ -14,7 +14,9 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   const total = document.getElementById("manualTotal").value.trim(); // U
 
   // Get payment and priority
-  const isCash = document.getElementById("manualCash").checked;
+  const isCash =
+    document.querySelector('input[name="manualPayment"]:checked').value ===
+    "Cash";
   const isPriority = document.getElementById("manualPriority").checked;
 
   if (!name && !phone && !address) return alert("Enter at least one detail.");
@@ -171,6 +173,7 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
   saveState();
 
   document.getElementById("reviewModal").classList.add("hidden");
+  showToast();
   document.getElementById("status").textContent = "Order added to queue.";
 });
 
@@ -185,4 +188,14 @@ function toggleManualEntry() {
 
   wrapper.classList.toggle("open");
   chevron.classList.toggle("rotate-180");
+}
+
+function showToast() {
+  const toast = document.getElementById("toastNotification");
+  toast.classList.add("show");
+
+  // Slide out after 4 seconds
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 4000);
 }

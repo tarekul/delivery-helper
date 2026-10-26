@@ -39,9 +39,12 @@ function renderOrders() {
           <input type="number" step="0.01" id="editTotal${index}" value="${order.total || ""}" placeholder="Total Price">
         </div>
         
-        <div class="payment-toggle" style="margin-bottom: 12px;">
-          <input type="checkbox" id="editCash${index}" ${order.isCash ? "checked" : ""}>
-          <label for="editCash${index}">💵 Cash Order</label>
+        <div class="payment-type-group" style="margin-bottom: 12px;">
+            <input type="radio" id="editCash${index}" name="editPayment${index}" value="Cash" class="hidden-radio" ${order.isCash ? "checked" : ""}>
+            <label for="editCash${index}" class="toggle-btn">💵 Cash</label>
+
+            <input type="radio" id="editCredit${index}" name="editPayment${index}" value="Credit" class="hidden-radio" ${!order.isCash ? "checked" : ""}>
+            <label for="editCredit${index}" class="toggle-btn">💳 Credit</label>
         </div>
         <div class="priority-toggle" style="margin-bottom: 12px;">
           <input type="checkbox" id="editPriority${index}" ${order.isPriority ? "checked" : ""}>
@@ -80,6 +83,10 @@ function renderOrders() {
       if (order.isCash) {
         badgesHTML +=
           '<span style="background: #10b981; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(16,185,129,0.3);">💵 Cash to Collect</span>';
+      }
+      if (!order.isCash) {
+        badgesHTML +=
+          '<span style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(59,130,246,0.3);">💳 Credit Card</span>';
       }
       badgesHTML += "</div>";
 

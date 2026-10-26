@@ -93,9 +93,25 @@
               </div>
 
               <!-- Manual Entry Options -->
-              <div class="payment-toggle">
-                <input type="checkbox" id="manualCash" />
-                <label for="manualCash">💵 Cash Order</label>
+              <div class="payment-type-group">
+                <input
+                  type="radio"
+                  id="manualCash"
+                  name="manualPayment"
+                  value="Cash"
+                  class="hidden-radio"
+                />
+                <label for="manualCash" class="toggle-btn">💵 Cash</label>
+
+                <input
+                  type="radio"
+                  id="manualCredit"
+                  name="manualPayment"
+                  value="Credit"
+                  class="hidden-radio"
+                  checked
+                />
+                <label for="manualCredit" class="toggle-btn">💳 Credit</label>
               </div>
 
               <div class="priority-toggle">
@@ -143,15 +159,27 @@
         </div>
 
         <!-- Review Modal Options -->
-        <div class="payment-toggle">
+        <div class="payment-type-group">
           <input
-            type="checkbox"
+            type="radio"
             id="reviewCash"
             name="reviewPayment"
             value="Cash"
+            class="hidden-radio"
           />
-          <label for="reviewCash">💵 Cash</label>
+          <label for="reviewCash" class="toggle-btn">💵 Cash</label>
+
+          <input
+            type="radio"
+            id="reviewCredit"
+            name="reviewPayment"
+            value="Credit"
+            class="hidden-radio"
+            checked
+          />
+          <label for="reviewCredit" class="toggle-btn">💳 Credit</label>
         </div>
+
         <div class="priority-toggle">
           <input type="checkbox" id="reviewPriority" />
           <label for="reviewPriority">⚠️ Running Late (Prioritize)</label>
@@ -162,6 +190,11 @@
           <button id="confirmReviewBtn" class="btn-green">Confirm</button>
         </div>
       </div>
+    </div>
+
+    <div id="toastNotification" class="toast">
+      <span>✅ Order Added</span>
+      <a href="orders.html" class="toast-link">View Route ➔</a>
     </div>
   </body>
 </html>
