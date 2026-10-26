@@ -101,9 +101,6 @@ function renderOrders() {
         <div class="dynamic-text">
           <span>👤</span> <span>${order.name || "N/A"}</span>
         </div>
-        <div class="dynamic-text">
-          <span>📞</span> <span>${order.phone || "N/A"}</span>
-        </div>
         <div class="dynamic-text" style="margin-bottom: 20px;">
           <span>📍</span> <span>${order.address || "N/A"}</span>
         </div>
@@ -111,9 +108,13 @@ function renderOrders() {
           <span>💲</span> <span>${order.total || ""}</span>
         </div>
         
-        <button class="btn-call" style="margin-bottom: 16px;" onclick="window.location.href='tel:${order.phone.replace(/\D/g, "")}'">
-          📞 Call
-        </button>
+        <a href="tel:${order.phone ? order.phone.replace(/\D/g, "") : ""}" class="phone-row">
+            <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="icon">📞</span>
+            <span>${order.phone || "No Phone Number"}</span>
+            </div>
+            ${order.phone ? `<span class="call-pill">CALL</span>` : ""}
+        </a>
         
         <div style="display: flex; gap: 12px; margin-bottom: 16px;">
           <button class="btn-google" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.address)}'">

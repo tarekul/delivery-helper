@@ -248,17 +248,43 @@ li {
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Call Button */
-.btn-call {
-  background-color: transparent;
-  color: var(--pj-dark);
-  border: 2px solid var(--pj-dark);
-  font-size: 18px;
-  transition: all 0.2s ease;
+/* Styling the phone row as a tappable "button" */
+.phone-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.03
+  ); /* Light background to signify interactiveness */
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s ease;
 }
-.btn-call:active {
-  background-color: var(--pj-dark);
+
+.phone-row:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Disable interaction style when no phone is available */
+.phone-row[href="tel:"] {
+  pointer-events: none;
+  background-color: transparent;
+  color: #6b7280; /* Dimmed text */
+}
+
+.call-pill {
+  background-color: #df1a22; /* Red accent or dark gray */
   color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 /* Modal Overlay */
@@ -414,37 +440,44 @@ li {
 }
 
 .btn-icon {
-  background: transparent;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-  padding: 8px;
-  border-radius: 8px;
-  width: auto;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
-  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  background-color: #ffffff;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-icon:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.btn-icon:active:not(:disabled) {
+  transform: scale(0.92);
+  background-color: #e5e7eb;
 }
 
 .btn-icon:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+  box-shadow: none;
+  background-color: transparent;
 }
 
-.btn-icon:not(:disabled):active {
-  background: #f3f4f6;
-  color: var(--pj-dark);
-  border-color: #9ca3af;
-}
-
-/* Update payment toggle for the new checkbox */
 .payment-toggle input[type="checkbox"] {
   display: none;
 }
 .payment-toggle input[type="checkbox"]:checked + label {
-  background: #10b981; /* Emerald Green */
+  background: #10b981;
   color: white;
   border-color: #059669;
 }
