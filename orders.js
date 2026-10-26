@@ -20,11 +20,24 @@ function renderOrders() {
 
     if (order.isEditing) {
       li.innerHTML = `
-        <strong>Edit Order ${index + 1}</strong>
-        <input type="text" id="editName${index}" class="edit-input" value="${order.name || ""}">
-        <input type="tel" id="editPhone${index}" class="edit-input" value="${order.phone || ""}">
-        <input type="text" id="editAddress${index}" class="edit-input" value="${order.address || ""}">
-        <input type="number" step="0.01" id="editTotal${index}" class="edit-input" value="${order.total || ""}">
+        <strong style="font-size: 18px; color: var(--pj-red); display: block; margin-bottom: 12px;">Edit Stop ${index + 1}</strong>
+        
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="editName${index}" value="${order.name || ""}" placeholder="Customer Name">
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📞</span>
+          <input type="tel" id="editPhone${index}" value="${order.phone || ""}" placeholder="Phone Number">
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📍</span>
+          <input type="text" id="editAddress${index}" value="${order.address || ""}" placeholder="Full Address">
+        </div>
+        <div class="input-group">
+          <span class="input-icon">💲</span>
+          <input type="number" step="0.01" id="editTotal${index}" value="${order.total || ""}" placeholder="Total Price">
+        </div>
         
         <div class="payment-toggle" style="margin-bottom: 12px;">
           <input type="checkbox" id="editCash${index}" ${order.isCash ? "checked" : ""}>
@@ -86,16 +99,16 @@ function renderOrders() {
         ${badgesHTML}
 
         <div class="dynamic-text">
-          <strong>Name:</strong> ${order.name}
+          <span>👤</span> <span>${order.name || "N/A"}</span>
         </div>
         <div class="dynamic-text">
-          <strong>Phone:</strong> ${order.phone}
+          <span>📞</span> <span>${order.phone || "N/A"}</span>
         </div>
         <div class="dynamic-text" style="margin-bottom: 20px;">
-          <strong>Address:</strong> ${order.address}
+          <span>📍</span> <span>${order.address || "N/A"}</span>
         </div>
         <div class="dynamic-text" style="margin-bottom: 20px;">
-          <strong>Total:</strong> $${order.total || "0.00"}
+          <span>💲</span> <span>${order.total || ""}</span>
         </div>
         
         <button class="btn-call" style="margin-bottom: 16px;" onclick="window.location.href='tel:${order.phone.replace(/\D/g, "")}'">
