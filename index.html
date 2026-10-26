@@ -37,40 +37,76 @@
       </div>
 
       <div class="card">
-        <strong class="section-title">Manual Entry</strong>
-        <div class="input-group">
-          <span class="input-icon">👤</span>
-          <input type="text" id="manualName" placeholder="Customer Name" />
-        </div>
-        <div class="input-group">
-          <span class="input-icon">📞</span>
-          <input type="tel" id="manualPhone" placeholder="Phone Number" />
-        </div>
-        <div class="input-group">
-          <span class="input-icon">📍</span>
-          <input type="text" id="manualAddress" placeholder="Full Address" />
-        </div>
-        <div class="input-group">
-          <span class="input-icon">💲</span>
-          <input
-            type="number"
-            step="0.01"
-            id="manualTotal"
-            placeholder="Total Price"
-          />
+        <!-- Tappable Header -->
+        <div class="collapse-header" onclick="toggleManualEntry()">
+          <strong class="section-title" style="margin: 0">Manual Entry</strong>
+          <svg
+            id="manual-chevron"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
         </div>
 
-        <!-- Manual Entry Options -->
-        <div class="payment-toggle">
-          <input type="checkbox" id="manualCash" />
-          <label for="manualCash">💵 Cash Order</label>
-        </div>
-        <div class="priority-toggle">
-          <input type="checkbox" id="manualPriority" />
-          <label for="manualPriority">⚠️ Running Late (Prioritize)</label>
-        </div>
+        <!-- Collapsible Form Wrapper (Collapsed by default) -->
+        <div id="manual-form-wrapper" class="collapse-grid">
+          <div class="collapse-inner">
+            <div class="form-content-spacing">
+              <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input
+                  type="text"
+                  id="manualName"
+                  placeholder="Customer Name"
+                />
+              </div>
 
-        <button id="addManualBtn" class="btn-green">Add Delivery</button>
+              <div class="input-group">
+                <span class="input-icon">📞</span>
+                <input type="tel" id="manualPhone" placeholder="Phone Number" />
+              </div>
+
+              <div class="input-group">
+                <span class="input-icon">📍</span>
+                <input
+                  type="text"
+                  id="manualAddress"
+                  placeholder="Full Address"
+                />
+              </div>
+
+              <div class="input-group">
+                <span class="input-icon">💲</span>
+                <input
+                  type="number"
+                  step="0.01"
+                  id="manualTotal"
+                  placeholder="Total Price"
+                />
+              </div>
+
+              <!-- Manual Entry Options -->
+              <div class="payment-toggle">
+                <input type="checkbox" id="manualCash" />
+                <label for="manualCash">💵 Cash Order</label>
+              </div>
+
+              <div class="priority-toggle">
+                <input type="checkbox" id="manualPriority" />
+                <label for="manualPriority">⚠️ Running Late (Prioritize)</label>
+              </div>
+
+              <button id="addManualBtn" class="btn-green">Add Delivery</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button

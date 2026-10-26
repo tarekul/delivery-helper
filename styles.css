@@ -482,6 +482,49 @@ li {
   border-color: #059669;
 }
 
+/* Header styling */
+.collapse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 0;
+  user-select: none;
+}
+
+#manual-chevron {
+  transition: transform 0.3s ease;
+  color: #6b7280; /* Subtle gray */
+}
+
+/* The Magic Grid Animation */
+.collapse-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.collapse-grid.open {
+  grid-template-rows: 1fr;
+}
+
+.collapse-inner {
+  overflow: hidden;
+}
+
+/* Spacing for the form so it doesn't jump weirdly during animation */
+.form-content-spacing {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toggled icon state */
+.rotate-180 {
+  transform: rotate(180deg) !important;
+}
+
 @media (max-height: 700px) {
   main {
     padding: 12px;

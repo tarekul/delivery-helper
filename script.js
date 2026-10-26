@@ -178,3 +178,11 @@ document.getElementById("cancelReviewBtn").addEventListener("click", () => {
   document.getElementById("reviewModal").classList.add("hidden");
   document.getElementById("status").textContent = "Scan cancelled.";
 });
+
+function toggleManualEntry() {
+  const wrapper = document.getElementById("manual-form-wrapper");
+  const chevron = document.getElementById("manual-chevron");
+
+  wrapper.classList.toggle("open");
+  chevron.classList.toggle("rotate-180");
+}
