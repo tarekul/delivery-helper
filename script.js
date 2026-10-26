@@ -14,10 +14,7 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   const total = document.getElementById("manualTotal").value.trim(); // U
 
   // Get payment and priority
-  const paymentNode = document.querySelector(
-    'input[name="manualPayment"]:checked',
-  );
-  const paymentType = paymentNode ? paymentNode.value : null;
+  const isCash = document.getElementById("manualCash").checked;
   const isPriority = document.getElementById("manualPriority").checked;
 
   if (!name && !phone && !address) return alert("Enter at least one detail.");
@@ -27,7 +24,7 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
     phone,
     address,
     total,
-    paymentType,
+    isCash,
     isPriority,
     isEditing: false,
   });
@@ -37,7 +34,7 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   document.getElementById("manualName").value = "";
   document.getElementById("manualPhone").value = "";
   document.getElementById("manualAddress").value = "";
-  if (paymentNode) paymentNode.checked = false;
+  document.getElementById("manualCash").checked = false;
   document.getElementById("manualPriority").checked = false;
 
   s.textContent = "Manual order added to queue.";
@@ -159,11 +156,7 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
   const address = document.getElementById("reviewAddress").value.trim();
   const total = document.getElementById("reviewTotal").value.trim();
 
-  // Get payment and priority
-  const paymentNode = document.querySelector(
-    'input[name="reviewPayment"]:checked',
-  );
-  const paymentType = paymentNode ? paymentNode.value : null;
+  const isCash = document.getElementById("reviewCash").checked;
   const isPriority = document.getElementById("reviewPriority").checked;
 
   orders.push({
@@ -171,7 +164,7 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
     phone,
     address,
     total,
-    paymentType,
+    isCash,
     isPriority,
     isEditing: false,
   });

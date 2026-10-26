@@ -432,6 +432,16 @@ li {
   border-color: #9ca3af;
 }
 
+/* Update payment toggle for the new checkbox */
+.payment-toggle input[type="checkbox"] {
+  display: none;
+}
+.payment-toggle input[type="checkbox"]:checked + label {
+  background: #10b981; /* Emerald Green */
+  color: white;
+  border-color: #059669;
+}
+
 @media (max-height: 700px) {
   main {
     padding: 12px;

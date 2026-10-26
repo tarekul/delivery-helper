@@ -26,11 +26,9 @@ function renderOrders() {
         <input type="text" id="editAddress${index}" class="edit-input" value="${order.address || ""}">
         <input type="number" step="0.01" id="editTotal${index}" class="edit-input" value="${order.total || ""}">
         
-        <div class="payment-toggle">
-          <input type="radio" id="editCash${index}" name="editPayment${index}" value="Cash" ${order.paymentType === "Cash" ? "checked" : ""}>
-          <label for="editCash${index}">💵 Cash</label>
-          <input type="radio" id="editCredit${index}" name="editPayment${index}" value="Credit" ${order.paymentType === "Credit" ? "checked" : ""}>
-          <label for="editCredit${index}">💳 Credit</label>
+        <div class="payment-toggle" style="margin-bottom: 12px;">
+          <input type="checkbox" id="editCash${index}" ${order.isCash ? "checked" : ""}>
+          <label for="editCash${index}">💵 Cash Order</label>
         </div>
         <div class="priority-toggle" style="margin-bottom: 12px;">
           <input type="checkbox" id="editPriority${index}" ${order.isPriority ? "checked" : ""}>
@@ -50,12 +48,25 @@ function renderOrders() {
         badgesHTML +=
           '<span style="background: #fbbf24; color: #000; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;">⚠️ Priority</span>';
       }
-      if (order.paymentType === "Cash") {
+      // High-visibility styling for Cash Orders
+      if (order.isCash) {
+        li.style.border = "2px solid #10b981";
+        li.style.backgroundColor = "rgba(16, 185, 129, 0.1)"; // Slight green tint
+      } else {
+        li.style.border = "1px solid rgba(255, 255, 255, 0.6)"; // Default frosty border
+        li.style.backgroundColor = "rgba(255, 255, 255, 0.5)"; // Default frosty glass
+      }
+
+      badgesHTML =
+        '<div style="margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap;">';
+
+      if (order.isPriority) {
         badgesHTML +=
-          '<span style="background: #10b981; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;">💵 Cash</span>';
-      } else if (order.paymentType === "Credit") {
+          '<span style="background: #fbbf24; color: #000; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;">⚠️ Priority</span>';
+      }
+      if (order.isCash) {
         badgesHTML +=
-          '<span style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;">💳 Credit</span>';
+          '<span style="background: #10b981; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(16,185,129,0.3);">💵 Cash to Collect</span>';
       }
       badgesHTML += "</div>";
 
@@ -174,10 +185,7 @@ window.saveEdit = (index) => {
     .getElementById(`editTotal${index}`)
     .value.trim();
 
-  const paymentNode = document.querySelector(
-    `input[name="editPayment${index}"]:checked`,
-  );
-  orders[index].paymentType = paymentNode ? paymentNode.value : null;
+  orders[index].isCash = document.getElementById(`editCash${index}`).checked;
   orders[index].isPriority = document.getElementById(
     `editPriority${index}`,
   ).checked;
