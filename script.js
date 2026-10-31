@@ -199,3 +199,27 @@ function showToast() {
     toast.classList.remove("show");
   }, 4000);
 }
+
+// Theme Toggle Logic
+const themeToggle = document.getElementById("themeToggle");
+const currentTheme = localStorage.getItem("theme") || "light";
+
+// Apply saved theme on load
+if (currentTheme === "dark") {
+  document.body.setAttribute("data-theme", "dark");
+  themeToggle.textContent = "☀️";
+}
+
+themeToggle.addEventListener("click", () => {
+  const isDark = document.body.getAttribute("data-theme") === "dark";
+
+  if (isDark) {
+    document.body.removeAttribute("data-theme");
+    localStorage.setItem("theme", "light");
+    themeToggle.textContent = "🌙";
+  } else {
+    document.body.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+    themeToggle.textContent = "☀️";
+  }
+});

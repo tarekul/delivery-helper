@@ -7,9 +7,9 @@ function renderOrders() {
   if (orders.length === 0) {
     orderList.innerHTML = `
       <div class="empty-state">
-        <img src="empty-bag.jpeg" alt="Empty Bag" />
+        <img src="empty-bag.png" alt="Empty Bag" />
         <h2>Queue Empty</h2>
-        <p>You have no active deliveries.</p>
+        <p class="empty-subtitle">You have no active deliveries.</p>
       </div>
     `;
     return;
@@ -221,3 +221,26 @@ function saveState() {
 }
 
 renderOrders();
+
+const themeToggle = document.getElementById("themeToggle");
+const currentTheme = localStorage.getItem("theme") || "light";
+
+// Apply saved theme on load
+if (currentTheme === "dark") {
+  document.body.setAttribute("data-theme", "dark");
+  themeToggle.textContent = "☀️";
+}
+
+themeToggle.addEventListener("click", () => {
+  const isDark = document.body.getAttribute("data-theme") === "dark";
+
+  if (isDark) {
+    document.body.removeAttribute("data-theme");
+    localStorage.setItem("theme", "light");
+    themeToggle.textContent = "🌙";
+  } else {
+    document.body.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+    themeToggle.textContent = "☀️";
+  }
+});

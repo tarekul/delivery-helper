@@ -4,6 +4,99 @@
   --pj-dark: #333333;
   --bg: #f4f4f5;
 }
+
+[data-theme="dark"] {
+  --bg: #0a192f; /* Deep Midnight Navy */
+  --pj-dark: #f8fafc;
+}
+
+body[data-theme="dark"] {
+  background-image:
+    linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.95)),
+    url("pizza-bg.jpeg");
+}
+
+body[data-theme="dark"] .card,
+body[data-theme="dark"] li {
+  background: rgba(17, 34, 64, 0.85); /* Elevated navy for cards */
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+body[data-theme="dark"] .modal-content {
+  background-color: #0a192f;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] input::placeholder {
+  color: #94a3b8; /* Soft blue-gray for readability */
+  opacity: 1;
+}
+
+body[data-theme="dark"] input[type="text"],
+body[data-theme="dark"] input[type="number"],
+body[data-theme="dark"] input[type="tel"] {
+  background-color: #233554; /* Distinct input background */
+  border-color: #30426b;
+  color: white;
+}
+
+body[data-theme="dark"] .custom-file-upload {
+  background-color: rgba(223, 26, 34, 0.15);
+}
+
+body[data-theme="dark"] .toggle-btn,
+body[data-theme="dark"] .payment-toggle label,
+body[data-theme="dark"] .priority-toggle label {
+  background-color: #233554;
+  border-color: #30426b;
+  color: #cbd5e1;
+}
+
+body[data-theme="dark"] .phone-row {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body[data-theme="dark"] .input-icon {
+  opacity: 1;
+  filter: brightness(1.2);
+}
+
+body[data-theme="dark"] .btn-icon {
+  background-color: #233554;
+  border-color: #30426b;
+  color: #cbd5e1;
+}
+
+body[data-theme="dark"] .btn-outline {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+body[data-theme="dark"] .empty-state img {
+  mix-blend-mode: normal;
+  filter: brightness(0.9) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+}
+
+body[data-theme="dark"] .empty-subtitle {
+  color: #94a3b8;
+}
+
+header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+#themeToggle {
+  width: auto;
+  margin: 0;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  box-shadow: none;
+  margin-left: auto;
+}
 body {
   font-family: system-ui, sans-serif;
   margin: 0;
