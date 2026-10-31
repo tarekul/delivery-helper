@@ -83,6 +83,19 @@ body[data-theme="dark"] .empty-subtitle {
   color: #94a3b8;
 }
 
+body[data-theme="dark"] .phone-link:active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .phone-link {
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Visible border for dark mode */
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body[data-theme="dark"] .phone-link:active {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
 header > div {
   display: flex;
   align-items: center;
@@ -754,19 +767,21 @@ input[value="Credit"]:checked + .toggle-btn {
 
 .phone-link {
   color: inherit;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15); /* Visible border for light mode */
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  transition: all 0.2s ease;
 }
 
 .phone-link:active {
   background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(0.98);
 }
-
-body[data-theme="dark"] .phone-link:active {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
 @media (max-height: 700px) {
   main {
     padding: 12px;

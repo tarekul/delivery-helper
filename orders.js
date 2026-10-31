@@ -93,9 +93,9 @@ function renderOrders() {
 
         <div class="order-grid">
           <span class="grid-item">👤 ${order.name || "N/A"}</span>
-          <a href="tel:${order.phone ? order.phone.replace(/\D/g, "") : ""}" class="grid-item phone-link" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between;">
-            <span>📞 ${order.phone || "N/A"}</span>
-            ${order.phone ? `<span class="call-pill" style="font-size: 10px; padding: 2px 6px;">CALL</span>` : ""}
+          <a href="tel:${order.phone ? order.phone.replace(/\D/g, "") : ""}" class="grid-item phone-link" style="text-decoration: none;">
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📞 ${order.phone || "N/A"}</span>
+            ${order.phone ? `<span class="call-pill" style="font-size: 10px; padding: 2px 6px; flex-shrink: 0;">CALL</span>` : ""}
           </a>
           <span class="grid-item">💲 ${order.total || "0.00"}</span>
           <span class="grid-item" style="font-weight: bold; color: ${order.isCash ? "#10b981" : "#38bdf8"};">
