@@ -19,6 +19,7 @@ function renderOrders() {
     const li = document.createElement("li");
 
     if (order.isEditing) {
+      // --- EDIT MODE (UNCHANGED) ---
       li.innerHTML = `
         <strong style="font-size: 18px; color: var(--pj-red); display: block; margin-bottom: 12px;">Edit Stop ${index + 1}</strong>
         
@@ -57,84 +58,64 @@ function renderOrders() {
         </div>
       `;
     } else {
-      // Create visual badges for the selected options
-      let badgesHTML =
-        '<div style="margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap;">';
-      if (order.isPriority) {
-        badgesHTML +=
-          '<span style="background: #fbbf24; color: #000; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;">⚠️ Priority</span>';
-      }
-      // High-visibility styling for Cash Orders
+      // --- COMPACT DISPLAY MODE ---
+
+      // Dynamic styling for Cash vs Credit
       if (order.isCash) {
         li.style.border = "2px solid #10b981";
-        li.style.backgroundColor = "rgba(16, 185, 129, 0.1)"; // Slight green tint
+        li.style.backgroundColor = "rgba(16, 185, 129, 0.6)";
       } else {
-        li.style.border = "1px solid rgba(255, 255, 255, 0.6)"; // Default frosty border
-        li.style.backgroundColor = "rgba(255, 255, 255, 0.5)"; // Default frosty glass
+        li.style.border = "1px solid rgba(255, 255, 255, 0.6)";
+        li.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
       }
 
-      badgesHTML =
-        '<div style="margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap;">';
-
-      if (order.isPriority) {
-        badgesHTML +=
-          '<span style="background: #fbbf24; color: #000; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px;">⚠️ Priority</span>';
-      }
-      if (order.isCash) {
-        badgesHTML +=
-          '<span style="background: #10b981; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(16,185,129,0.3);">💵 Cash to Collect</span>';
-      }
-      if (!order.isCash) {
-        badgesHTML +=
-          '<span style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(59,130,246,0.3);">💳 Credit Card</span>';
-      }
-      badgesHTML += "</div>";
+      // Add base compact classes
+      li.className = `card compact-order ${order.isPriority ? "priority-border" : ""}`;
 
       li.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <strong style="font-size: 18px; color: var(--pj-red);">Stop ${index + 1}</strong>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong style="font-size: 16px; color: var(--pj-red);">
+            Stop ${index + 1} ${order.isPriority ? '<span style="font-size:14px; margin-left:4px;">⚠️</span>' : ""}
+          </strong>
           <div style="display: flex; gap: 8px;">
-            <button class="btn-icon" onclick="moveOrder(${index}, -1)" ${index === 0 ? "disabled" : ""}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            <button class="btn-icon" style="padding: 4px;" onclick="moveOrder(${index}, -1)" ${index === 0 ? "disabled" : ""}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
             </button>
-            <button class="btn-icon" onclick="moveOrder(${index}, 1)" ${index === orders.length - 1 ? "disabled" : ""}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            <button class="btn-icon" style="padding: 4px;" onclick="moveOrder(${index}, 1)" ${index === orders.length - 1 ? "disabled" : ""}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
             </button>
           </div>
         </div>
         
-        ${badgesHTML}
+        <div class="order-main">
+          <span class="order-address">📍 ${order.address || "N/A"}</span>
+        </div>
 
-        <div class="dynamic-text">
-          <span>👤</span> <span>${order.name || "N/A"}</span>
+        <div class="order-grid">
+          <span class="grid-item">👤 ${order.name || "N/A"}</span>
+          <a href="tel:${order.phone ? order.phone.replace(/\D/g, "") : ""}" class="grid-item phone-link" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between;">
+            <span>📞 ${order.phone || "N/A"}</span>
+            ${order.phone ? `<span class="call-pill" style="font-size: 10px; padding: 2px 6px;">CALL</span>` : ""}
+          </a>
+          <span class="grid-item">💲 ${order.total || "0.00"}</span>
+          <span class="grid-item" style="font-weight: bold; color: ${order.isCash ? "#10b981" : "#38bdf8"};">
+            ${order.isCash ? "💵 Cash" : "💳 Credit"}
+          </span>
         </div>
-        <div class="dynamic-text" style="margin-bottom: 20px;">
-          <span>📍</span> <span>${order.address || "N/A"}</span>
-        </div>
-        <div class="dynamic-text" style="margin-bottom: 20px;">
-          <span>💲</span> <span>${order.total || ""}</span>
-        </div>
-        
-        <a href="tel:${order.phone ? order.phone.replace(/\D/g, "") : ""}" class="phone-row">
-            <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="icon">📞</span>
-            <span>${order.phone || "No Phone Number"}</span>
-            </div>
-            ${order.phone ? `<span class="call-pill">CALL</span>` : ""}
-        </a>
-        
-        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-          <button class="btn-google" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.address)}'">
-            📍 Google Maps
+
+        <div class="order-actions-grid">
+          <button class="btn-compact" style="background-color: #4285F4; color: white;" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.address)}'">
+            📍 Maps
           </button>
-          <button class="btn-waze" onclick="window.location.href='https://waze.com/ul?q=${encodeURIComponent(order.address)}&navigate=yes'">
+          <button class="btn-compact" style="background-color: #0ea5e9; color: white;" onclick="window.location.href='https://waze.com/ul?q=${encodeURIComponent(order.address)}&navigate=yes'">
             🚙 Waze
           </button>
-        </div>
-
-        <div class="order-actions">
-          <button class="btn-green" onclick="toggleEdit(${index})">Edit</button>
-          <button onclick="removeOrder(${index})">Complete</button>
+          <button class="btn-compact" style="background-color: #4b5563; color: white;" onclick="toggleEdit(${index})">
+            Edit
+          </button>
+          <button class="btn-compact" style="background-color: #16a34a; color: white;" onclick="removeOrder(${index})">
+            Complete
+          </button>
         </div>
       `;
     }
