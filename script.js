@@ -8,7 +8,6 @@ function saveState() {
 }
 
 document.getElementById("addManualBtn").addEventListener("click", () => {
-  const name = document.getElementById("manualName").value.trim();
   const phone = document.getElementById("manualPhone").value.trim();
   const address = document.getElementById("manualAddress").value.trim();
   const total = document.getElementById("manualTotal").value.trim(); // U
@@ -18,10 +17,9 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
     "Cash";
   const isPriority = document.getElementById("manualPriority").checked;
 
-  if (!name && !phone && !address) return alert("Enter at least one detail.");
+  if (!phone && !address) return alert("Enter at least one detail.");
 
   orders.push({
-    name,
     phone,
     address,
     total,
@@ -32,7 +30,6 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   saveState();
 
   // Reset inputs
-  document.getElementById("manualName").value = "";
   document.getElementById("manualPhone").value = "";
   document.getElementById("manualAddress").value = "";
   document.getElementById("manualCash").checked = false;
@@ -84,31 +81,7 @@ async function processWithCloudOCR(base64Image) {
     const rawText = data.ParsedResults[0].ParsedText;
     console.log(rawText);
 
-    // 1. Name Extraction (Added broken vertical fallback for missing colons)
-    const brokenVerticalMatch = rawText.match(
-      /Customer[\s\S]*?[（(]?\d{3}[)）]?[\s.-]?\d{3}[\s.-]?\d{4}[\s\S]*?:\s*([a-zA-Z '-]+)/i,
-    );
-    const verticalMatch = rawText.match(
-      /Customer[\s\S]*?:\s*[()\d\-\s]+[\r\n]+\s*:\s*([a-zA-Z '-]+)/i,
-    );
-    const stackedMatch = rawText.match(
-      /Name\s*:[\s\S]*?Address\s*:[\r\n]+([a-zA-Z '-]+)/i,
-    );
-    const horizontalMatch = rawText.match(
-      /(?:Customer|Name)\s*:\s*([a-zA-Z '-]+)/i,
-    );
-
-    let name = "Name not found";
-    if (brokenVerticalMatch) name = brokenVerticalMatch[1].trim();
-    else if (verticalMatch) name = verticalMatch[1].trim();
-    else if (stackedMatch) name = stackedMatch[1].trim();
-    else if (
-      horizontalMatch &&
-      !horizontalMatch[1].toLowerCase().includes("address")
-    )
-      name = horizontalMatch[1].trim();
-
-    // 2. Phone Extraction (Supports full-width unicode parentheses and normalizes them)
+    // 2. Phone Extraction
     const phoneMatch = rawText.match(
       /[（(]?\d{3}[)）]?[\s.-]?\d{3}[\s.-]?\d{4}/,
     );
@@ -116,29 +89,44 @@ async function processWithCloudOCR(base64Image) {
       ? phoneMatch[0].replace(/（/g, "(").replace(/）/g, ")")
       : "Phone not found";
 
-    // 3. Address Extraction (Forces the capture to continue until it finds a State + Zip boundary like "NY 11420")
+    // 3. Address Extraction
     const addressMatch = rawText.match(
       /Address\s*:?[\s\S]*?(?=\d)([\s\S]*?\b[A-Za-z]{2}\s*\d{5}\b)/i,
     );
     const address = addressMatch
       ? addressMatch[1]
-          .replace(/\bFL\.?\s*\d*\b/gi, "")
+          .replace(/\bFLR?\.?\s*\d*\b/gi, "")
           .replace(/\s+/g, " ")
           .trim()
       : "Address not found";
 
-    // 4. Total Extraction
-    const totalMatch = rawText.match(/\bTotal\s*:\s*[\s\S]*?(\d+\.\d{2})/i);
-    const total = totalMatch ? totalMatch[1] : "";
+    // 4. Total Extraction (Smart Cent-Matching)
+    let total = "";
 
-    document.getElementById("reviewName").value = name;
+    // Extracts the cents from the written receipt text (e.g. "41" from "and 41/100 cents")
+    const centsMatch = rawText.match(/(\d{2})\/100 cents/i);
+    const allPrices = rawText.match(/\d+\.\d{2}/g);
+
+    if (centsMatch && allPrices) {
+      const cents = centsMatch[1];
+      // Finds all prices ending in those cents, and safely grabs the last one (the true total)
+      const matchingPrices = allPrices.filter((p) => p.endsWith(`.${cents}`));
+      if (matchingPrices.length > 0) {
+        total = matchingPrices[matchingPrices.length - 1];
+      }
+    }
+
+    // Fallback if cents text isn't found
+    if (!total) {
+      const fallbackMatch = rawText.match(
+        /\bTotal\s*:\s*[\s\S]*?(\d+\.\d{2})/i,
+      );
+      total = fallbackMatch ? fallbackMatch[1] : "";
+    }
+
     document.getElementById("reviewPhone").value = phone;
     document.getElementById("reviewAddress").value = address;
     document.getElementById("reviewTotal").value = total;
-
-    document.getElementById("reviewName").value = name;
-    document.getElementById("reviewPhone").value = phone;
-    document.getElementById("reviewAddress").value = address;
 
     document
       .querySelectorAll('input[name="reviewPayment"]')
@@ -152,7 +140,6 @@ async function processWithCloudOCR(base64Image) {
 }
 
 document.getElementById("confirmReviewBtn").addEventListener("click", () => {
-  const name = document.getElementById("reviewName").value.trim();
   const phone = document.getElementById("reviewPhone").value.trim();
   const address = document.getElementById("reviewAddress").value.trim();
   const total = document.getElementById("reviewTotal").value.trim();
@@ -161,7 +148,6 @@ document.getElementById("confirmReviewBtn").addEventListener("click", () => {
   const isPriority = document.getElementById("reviewPriority").checked;
 
   orders.push({
-    name,
     phone,
     address,
     total,

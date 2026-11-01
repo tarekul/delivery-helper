@@ -4,15 +4,57 @@ let orders = JSON.parse(localStorage.getItem("delivery_orders")) || [];
 let deliveryMap = null;
 let mapMarkers = [];
 
-async function updateFreeMap() {
+let isMapView = false;
+
+// 1. Strict visibility enforcer guarantees no overlap
+function applyViewVisibility() {
   const mapContainer = document.getElementById("map-container");
+  const orderList = document.getElementById("orderList");
+  const toggleBtn = document.getElementById("viewToggleBtn");
 
   if (orders.length === 0) {
     mapContainer.style.display = "none";
+    orderList.style.display = "block";
+    if (toggleBtn) toggleBtn.style.display = "none";
     return;
   }
 
-  mapContainer.style.display = "block";
+  if (toggleBtn) toggleBtn.style.display = "block";
+
+  if (isMapView) {
+    mapContainer.style.display = "flex";
+    mapContainer.style.flexDirection = "column";
+    orderList.style.display = "none";
+    if (toggleBtn) toggleBtn.innerHTML = "Show List";
+  } else {
+    mapContainer.style.display = "none";
+    orderList.style.display = "grid";
+    if (toggleBtn) toggleBtn.innerHTML = "Show Map";
+  }
+}
+
+window.toggleView = () => {
+  isMapView = !isMapView;
+  applyViewVisibility();
+
+  if (isMapView) {
+    setTimeout(() => {
+      if (deliveryMap) {
+        deliveryMap.invalidateSize();
+        if (mapMarkers.length > 0) {
+          const group = new L.featureGroup(mapMarkers);
+          deliveryMap.fitBounds(group.getBounds(), {
+            padding: [30, 30],
+            maxZoom: 15,
+          });
+        }
+      }
+    }, 200);
+  }
+};
+
+async function updateFreeMap() {
+  if (orders.length === 0) return;
 
   if (!deliveryMap) {
     deliveryMap = L.map("map").setView([40.682, -73.845], 14);
@@ -127,6 +169,7 @@ function renderOrders() {
         <p class="empty-subtitle">You have no active deliveries.</p>
       </div>
     `;
+    updateFreeMap();
     return;
   }
 
@@ -137,10 +180,6 @@ function renderOrders() {
       li.innerHTML = `
         <strong style="font-size: 18px; color: var(--pj-red); display: block; margin-bottom: 12px;">Edit Stop ${index + 1}</strong>
         
-        <div class="input-group">
-          <span class="input-icon">👤</span>
-          <input type="text" id="editName${index}" value="${order.name || ""}" placeholder="Customer Name">
-        </div>
         <div class="input-group">
           <span class="input-icon">📞</span>
           <input type="tel" id="editPhone${index}" value="${order.phone || ""}" placeholder="Phone Number">
@@ -173,8 +212,7 @@ function renderOrders() {
       `;
     } else {
       if (order.isCash) {
-        li.style.border = "2px solid #10b981";
-        li.style.backgroundColor = "rgba(16, 185, 129, 0.6)";
+        li.style.borderLeft = "8px solid #10b981";
       } else {
         li.style.border = "1px solid rgba(255, 255, 255, 0.6)";
         li.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
@@ -183,34 +221,48 @@ function renderOrders() {
       li.className = `card compact-order ${order.isPriority ? "priority-border" : ""}`;
 
       li.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong style="font-size: 16px; color: var(--pj-red);">
-            Stop ${index + 1} ${order.isPriority ? '<span style="font-size:14px; margin-left:4px;">⚠️</span>' : ""}
-          </strong>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-icon" style="padding: 4px;" onclick="moveOrder(${index}, -1)" ${index === 0 ? "disabled" : ""}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <strong style="font-size: 16px; color: var(--pj-red);">
+              Stop ${index + 1}
+            </strong>
+            <span style="font-size: 12px; font-weight: bold; padding: 2px 8px; border-radius: 12px; background-color: ${order.isCash ? "rgba(16, 185, 129, 0.15)" : "rgba(56, 189, 248, 0.15)"}; color: ${order.isCash ? "#10b981" : "#0ea5e9"}; border: 1px solid ${order.isCash ? "#10b981" : "#38bdf8"};">
+              ${order.isCash ? "💵 Cash" : "💳 Credit"}
+            </span>
+            ${order.isPriority ? '<span style="font-size:14px;" title="Running Late">⚠️</span>' : ""}
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-icon" style="padding: 4px; color: #6b7280;" onclick="toggleEdit(${index})" title="Edit Order">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </button>
-            <button class="btn-icon" style="padding: 4px;" onclick="moveOrder(${index}, 1)" ${index === orders.length - 1 ? "disabled" : ""}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-            </button>
+            <div style="display: flex; gap: 4px; border-left: 1px solid rgba(0,0,0,0.15); padding-left: 8px;">
+              <button class="btn-icon" style="padding: 4px;" onclick="moveOrder(${index}, -1)" ${index === 0 ? "disabled" : ""}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              </button>
+              <button class="btn-icon" style="padding: 4px;" onclick="moveOrder(${index}, 1)" ${index === orders.length - 1 ? "disabled" : ""}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              </button>
+            </div>
           </div>
         </div>
         
-        <div class="order-main">
-          <span class="order-address">📍 ${order.address || "N/A"}</span>
+        <div class="order-main" style="margin-bottom: 12px;">
+          <span class="order-address" style="display: block; font-size: 15px;">📍 ${order.address || "N/A"}</span>
         </div>
 
-        <div class="order-grid">
-          <span class="grid-item">👤 ${order.name || "N/A"}</span>
-          <a href="tel:${order.phone ? order.phone.replace(/\D/g, "") : ""}" class="grid-item phone-link" style="text-decoration: none;">
-            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📞 ${order.phone || "N/A"}</span>
-            ${order.phone ? `<span class="call-pill" style="font-size: 10px; padding: 2px 6px; flex-shrink: 0;">CALL</span>` : ""}
-          </a>
-          <span class="grid-item">💲 ${order.total || "0.00"}</span>
-          <span class="grid-item" style="font-weight: bold; color: ${order.isCash ? "#10b981" : "#38bdf8"};">
-            ${order.isCash ? "💵 Cash" : "💳 Credit"}
-          </span>
+        <div class="order-grid" style="align-items: stretch; margin-bottom: 16px;">
+          ${
+            order.phone
+              ? `<a href="tel:${order.phone.replace(/\D/g, "")}" class="grid-item phone-link" style="text-decoration: none; justify-content: center; font-weight: bold; color: var(--pj-dark); display: flex; align-items: center; min-height: 36px;">
+                 Call Customer
+               </a>`
+              : `<span class="grid-item phone-link" style="justify-content: center; color: #9ca3af; pointer-events: none; display: flex; align-items: center; min-height: 36px;">
+                 No Number
+               </span>`
+          }
+          <div class="grid-item" style="font-size: 16px; font-weight: bold; text-align: center; color: var(--pj-dark); background-color: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; min-height: 36px;">
+            💲 ${order.total || "0.00"}
+          </div>
         </div>
 
         <div class="order-actions-grid">
@@ -220,11 +272,11 @@ function renderOrders() {
           <button class="btn-compact" style="background-color: #0ea5e9; color: white;" onclick="window.location.href='https://waze.com/ul?q=${encodeURIComponent(order.address)}&navigate=yes'">
             🚙 Waze
           </button>
-          <button class="btn-compact" style="background-color: #4b5563; color: white;" onclick="toggleEdit(${index})">
-            Edit
-          </button>
-          <button class="btn-compact" style="background-color: #16a34a; color: white;" onclick="removeOrder(${index})">
-            Complete
+          <button class="btn-compact" style="background-color: ${order.isCash ? "#10b981" : "var(--pj-red)"}; color: white; grid-column: 1 / -1; padding: 14px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; box-shadow: 0 4px 6px ${order.isCash ? "rgba(16, 185, 129, 0.3)" : "rgba(223, 26, 34, 0.25)"}; transition: opacity 0.2s ease;" onclick="removeOrder(${index})">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            ${order.isCash ? `Collect Cash & Complete` : `Complete Delivery`}
           </button>
         </div>
       `;
@@ -232,6 +284,7 @@ function renderOrders() {
     orderList.appendChild(li);
   });
   updateFreeMap();
+  applyViewVisibility();
 }
 
 window.moveOrder = (index, direction) => {
@@ -286,7 +339,6 @@ window.cancelEdit = (index) => {
 };
 
 window.saveEdit = (index) => {
-  orders[index].name = document.getElementById(`editName${index}`).value.trim();
   orders[index].phone = document
     .getElementById(`editPhone${index}`)
     .value.trim();
