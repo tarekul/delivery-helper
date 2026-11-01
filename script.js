@@ -13,7 +13,6 @@ document.getElementById("addManualBtn").addEventListener("click", () => {
   const address = document.getElementById("manualAddress").value.trim();
   const total = document.getElementById("manualTotal").value.trim(); // U
 
-  // Get payment and priority
   const isCash =
     document.querySelector('input[name="manualPayment"]:checked').value ===
     "Cash";
@@ -194,13 +193,11 @@ function showToast() {
   const toast = document.getElementById("toastNotification");
   toast.classList.add("show");
 
-  // Slide out after 4 seconds
   setTimeout(() => {
     toast.classList.remove("show");
   }, 4000);
 }
 
-// Theme Toggle Logic
 const themeToggle = document.getElementById("themeToggle");
 const currentTheme = localStorage.getItem("theme") || "light";
 

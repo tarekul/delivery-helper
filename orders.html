@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Active Queue</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script defer src="orders.js"></script>
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#df1a22" />
@@ -32,9 +37,23 @@
           &larr; Back
         </button>
       </div>
+      <div
+        id="map-container"
+        style="
+          display: none;
+          flex-shrink: 0;
+          min-height: 250px;
+          margin-bottom: 16px;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        "
+      >
+        <div id="map" style="height: 250px; width: 100%"></div>
+      </div>
       <ul id="orderList"></ul>
     </main>
-    <!-- Custom Navigation Modal -->
+
     <div id="navModal" class="modal hidden">
       <div class="card modal-content" style="text-align: center">
         <h2 style="margin-top: 0; color: var(--pj-dark)">Delivery Complete!</h2>

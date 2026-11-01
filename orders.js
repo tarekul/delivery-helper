@@ -1,6 +1,121 @@
 const orderList = document.getElementById("orderList");
 let orders = JSON.parse(localStorage.getItem("delivery_orders")) || [];
 
+let deliveryMap = null;
+let mapMarkers = [];
+
+async function updateFreeMap() {
+  const mapContainer = document.getElementById("map-container");
+
+  if (orders.length === 0) {
+    mapContainer.style.display = "none";
+    return;
+  }
+
+  mapContainer.style.display = "block";
+
+  if (!deliveryMap) {
+    deliveryMap = L.map("map").setView([40.682, -73.845], 14);
+
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      {
+        maxZoom: 16,
+        updateWhenIdle: true,
+        keepBuffer: 2,
+      },
+    ).addTo(deliveryMap);
+  }
+
+  // Clear old pins
+  mapMarkers.forEach((marker) => deliveryMap.removeLayer(marker));
+  mapMarkers = [];
+
+  // 1. Plot the Papa Johns Store using NYC's official API
+  try {
+    const storeResponse = await fetch(
+      "https://geosearch.planninglabs.nyc/v2/search?text=94-31%20Rockaway%20Blvd,%20Queens",
+    );
+    const storeData = await storeResponse.json();
+
+    if (storeData && storeData.features && storeData.features.length > 0) {
+      const storeLon = storeData.features[0].geometry.coordinates[0];
+      const storeLat = storeData.features[0].geometry.coordinates[1];
+
+      const storeIcon = L.divIcon({
+        html: `<div style="
+          background-color: #df1a22; 
+          border: 2px solid white; 
+          border-radius: 50%; 
+          width: 36px; 
+          height: 36px; 
+          display: flex; 
+          justify-content: center; 
+          align-items: center; 
+          font-size: 20px; 
+          box-shadow: 0px 3px 6px rgba(0,0,0,0.5);
+        ">🍕</div>`,
+        className: "",
+        iconSize: [36, 36],
+        iconAnchor: [18, 18],
+      });
+
+      const storeMarker = L.marker([storeLat, storeLon], { icon: storeIcon })
+        .addTo(deliveryMap)
+        .bindPopup(`<b>🏪 Papa Johns</b><br>94-31 Rockaway Blvd`);
+
+      mapMarkers.push(storeMarker);
+    }
+  } catch (error) {
+    console.error("Store geocoding failed");
+  }
+
+  // 2. Geocode and plot each active order
+  for (let i = 0; i < orders.length; i++) {
+    const order = orders[i];
+    if (!order.address) continue;
+
+    try {
+      const response = await fetch(
+        `https://geosearch.planninglabs.nyc/v2/search?text=${encodeURIComponent(order.address)}`,
+      );
+      const data = await response.json();
+
+      if (data && data.features && data.features.length > 0) {
+        const lon = data.features[0].geometry.coordinates[0];
+        const lat = data.features[0].geometry.coordinates[1];
+
+        const marker = L.marker([lat, lon])
+          .addTo(deliveryMap)
+          .bindPopup(`<b>Stop ${i + 1}</b><br>${order.address}`);
+
+        mapMarkers.push(marker);
+      } else {
+        console.warn(
+          "NYC GeoSearch could not find location for:",
+          order.address,
+        );
+      }
+    } catch (error) {
+      console.error("Geocoding failed for:", order.address);
+    }
+  }
+
+  // Auto-zoom to fit the store and all delivery pins perfectly on screen
+  if (mapMarkers.length > 0) {
+    const group = new L.featureGroup(mapMarkers);
+    deliveryMap.fitBounds(group.getBounds(), {
+      padding: [30, 30],
+      maxZoom: 15,
+    });
+  }
+
+  // Force Leaflet to redraw the map for the mobile screen dimensions
+  setTimeout(() => {
+    deliveryMap.invalidateSize();
+  }, 400);
+}
+
 function renderOrders() {
   orderList.innerHTML = "";
 
@@ -19,7 +134,6 @@ function renderOrders() {
     const li = document.createElement("li");
 
     if (order.isEditing) {
-      // --- EDIT MODE (UNCHANGED) ---
       li.innerHTML = `
         <strong style="font-size: 18px; color: var(--pj-red); display: block; margin-bottom: 12px;">Edit Stop ${index + 1}</strong>
         
@@ -58,9 +172,6 @@ function renderOrders() {
         </div>
       `;
     } else {
-      // --- COMPACT DISPLAY MODE ---
-
-      // Dynamic styling for Cash vs Credit
       if (order.isCash) {
         li.style.border = "2px solid #10b981";
         li.style.backgroundColor = "rgba(16, 185, 129, 0.6)";
@@ -69,7 +180,6 @@ function renderOrders() {
         li.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
       }
 
-      // Add base compact classes
       li.className = `card compact-order ${order.isPriority ? "priority-border" : ""}`;
 
       li.innerHTML = `
@@ -121,6 +231,7 @@ function renderOrders() {
     }
     orderList.appendChild(li);
   });
+  updateFreeMap();
 }
 
 window.moveOrder = (index, direction) => {
@@ -129,7 +240,7 @@ window.moveOrder = (index, direction) => {
     const temp = orders[index];
     orders[index] = orders[newIndex];
     orders[newIndex] = temp;
-    saveState(); // Saves the new order and re-renders
+    saveState();
   }
 };
 
@@ -141,7 +252,6 @@ window.removeOrder = (index) => {
     const nextStop = orders[0];
     const modal = document.getElementById("navModal");
 
-    // Inject the next address into the modal
     document.getElementById("navAddress").textContent = nextStop.address;
 
     // Route to Google Maps
@@ -206,7 +316,6 @@ renderOrders();
 const themeToggle = document.getElementById("themeToggle");
 const currentTheme = localStorage.getItem("theme") || "light";
 
-// Apply saved theme on load
 if (currentTheme === "dark") {
   document.body.setAttribute("data-theme", "dark");
   themeToggle.textContent = "☀️";
