@@ -253,11 +253,11 @@ function renderOrders() {
         <div class="order-grid" style="align-items: stretch; margin-bottom: 16px;">
           ${
             order.phone
-              ? `<a href="tel:${order.phone.replace(/\D/g, "")}" class="grid-item phone-link" style="text-decoration: none; justify-content: center; font-weight: bold; color: var(--pj-dark); display: flex; align-items: center; min-height: 36px;">
-                 Call Customer
+              ? `<a href="tel:${order.phone.replace(/\D/g, "")}" class="grid-item phone-link" style="text-decoration: none; justify-content: center; font-weight: bold; color: var(--pj-dark); display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 14px;">
+                 📞 ${order.phone}
                </a>`
-              : `<span class="grid-item phone-link" style="justify-content: center; color: #9ca3af; pointer-events: none; display: flex; align-items: center; min-height: 36px;">
-                 No Number
+              : `<span class="grid-item phone-link" style="justify-content: center; color: #9ca3af; pointer-events: none; display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 14px;">
+                 📞 No Number
                </span>`
           }
           <div class="grid-item" style="font-size: 16px; font-weight: bold; text-align: center; color: var(--pj-dark); background-color: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; min-height: 36px;">
