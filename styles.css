@@ -112,7 +112,7 @@ header > div {
   margin: 0;
   padding: 8px;
   background: transparent;
-  border: none;
+  border: 1px solid bisque;
   font-size: 24px;
   box-shadow: none;
   margin-left: auto;
@@ -134,7 +134,7 @@ body {
   overflow: hidden;
 }
 header {
-  background-color: var(--pj-red);
+  background-color: transparent;
   color: white;
   padding: 16px;
   display: flex;
@@ -152,6 +152,7 @@ header {
 h1 {
   margin: 0;
   font-size: 24px;
+  color: var(--pj-red);
 }
 main {
   flex: 1;
