@@ -227,7 +227,6 @@ function renderOrders() {
         li.style.borderLeft = "8px solid #10b981";
       } else {
         li.style.border = "1px solid rgba(255, 255, 255, 0.6)";
-        li.style.backgroundColor = "rgba(71, 88, 108, 0.5)";
       }
 
       li.className = `card compact-order ${order.isPriority ? "priority-border" : ""}`;
