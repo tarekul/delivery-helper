@@ -6,7 +6,6 @@ let mapMarkers = [];
 
 let isMapView = false;
 
-// 1. Strict visibility enforcer guarantees no overlap
 function applyViewVisibility() {
   const mapContainer = document.getElementById("map-container");
   const orderList = document.getElementById("orderList");
@@ -54,7 +53,14 @@ window.toggleView = () => {
 };
 
 async function updateFreeMap() {
-  if (orders.length === 0) return;
+  const mapContainer = document.getElementById("map-container");
+  const toggleBtn = document.getElementById("viewToggleBtn");
+
+  if (orders.length === 0) {
+    mapContainer.style.display = "none";
+    if (toggleBtn) toggleBtn.style.display = "none";
+    return;
+  }
 
   if (!deliveryMap) {
     deliveryMap = L.map("map").setView([40.682, -73.845], 14);
@@ -73,7 +79,7 @@ async function updateFreeMap() {
   mapMarkers.forEach((marker) => deliveryMap.removeLayer(marker));
   mapMarkers = [];
 
-  // 1. Plot the Papa Johns Store using NYC's official API
+  // 1. Plot the Papa Johns Store
   try {
     const storeResponse = await fetch(
       "https://geosearch.planninglabs.nyc/v2/search?text=94-31%20Rockaway%20Blvd,%20Queens",
@@ -85,18 +91,7 @@ async function updateFreeMap() {
       const storeLat = storeData.features[0].geometry.coordinates[1];
 
       const storeIcon = L.divIcon({
-        html: `<div style="
-          background-color: #df1a22; 
-          border: 2px solid white; 
-          border-radius: 50%; 
-          width: 36px; 
-          height: 36px; 
-          display: flex; 
-          justify-content: center; 
-          align-items: center; 
-          font-size: 20px; 
-          box-shadow: 0px 3px 6px rgba(0,0,0,0.5);
-        ">🍕</div>`,
+        html: `<div style="background-color: #df1a22; border: 2px solid white; border-radius: 50%; width: 36px; height: 36px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 0px 3px 6px rgba(0,0,0,0.5);">🍕</div>`,
         className: "",
         iconSize: [36, 36],
         iconAnchor: [18, 18],
@@ -115,6 +110,11 @@ async function updateFreeMap() {
   // 2. Geocode and plot each active order
   for (let i = 0; i < orders.length; i++) {
     const order = orders[i];
+
+    // Wipe old coordinates in case the driver edited the address
+    delete order.lat;
+    delete order.lon;
+
     if (!order.address) continue;
 
     try {
@@ -127,34 +127,46 @@ async function updateFreeMap() {
         const lon = data.features[0].geometry.coordinates[0];
         const lat = data.features[0].geometry.coordinates[1];
 
+        order.lon = lon;
+        order.lat = lat;
+
         const marker = L.marker([lat, lon])
           .addTo(deliveryMap)
           .bindPopup(`<b>Stop ${i + 1}</b><br>${order.address}`);
 
         mapMarkers.push(marker);
-      } else {
-        console.warn(
-          "NYC GeoSearch could not find location for:",
-          order.address,
-        );
       }
     } catch (error) {
       console.error("Geocoding failed for:", order.address);
     }
   }
 
-  // Auto-zoom to fit the store and all delivery pins perfectly on screen
-  if (mapMarkers.length > 0) {
-    const group = new L.featureGroup(mapMarkers);
-    deliveryMap.fitBounds(group.getBounds(), {
-      padding: [30, 30],
-      maxZoom: 15,
-    });
+  // 3. Validation: Did every order successfully geocode?
+  const allMapped = orders.every((o) => o.lat && o.lon);
+
+  if (allMapped) {
+    if (toggleBtn) toggleBtn.style.display = "block";
+
+    mapContainer.style.display = isMapView ? "flex" : "none";
+    if (isMapView) mapContainer.style.flexDirection = "column";
+
+    if (mapMarkers.length > 0) {
+      const group = new L.featureGroup(mapMarkers);
+      deliveryMap.fitBounds(group.getBounds(), {
+        padding: [30, 30],
+        maxZoom: 15,
+      });
+    }
+  } else {
+    isMapView = false;
+    mapContainer.style.display = "none";
+    document.getElementById("orderList").style.display = "grid";
+
+    if (toggleBtn) toggleBtn.style.display = "none";
   }
 
-  // Force Leaflet to redraw the map for the mobile screen dimensions
   setTimeout(() => {
-    deliveryMap.invalidateSize();
+    if (deliveryMap && isMapView) deliveryMap.invalidateSize();
   }, 400);
 }
 
@@ -215,7 +227,7 @@ function renderOrders() {
         li.style.borderLeft = "8px solid #10b981";
       } else {
         li.style.border = "1px solid rgba(255, 255, 255, 0.6)";
-        li.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+        li.style.backgroundColor = "rgba(71, 88, 108, 0.5)";
       }
 
       li.className = `card compact-order ${order.isPriority ? "priority-border" : ""}`;
@@ -226,7 +238,7 @@ function renderOrders() {
             <strong style="font-size: 16px; color: var(--pj-red);">
               Stop ${index + 1}
             </strong>
-            <span style="font-size: 12px; font-weight: bold; padding: 2px 8px; border-radius: 12px; background-color: ${order.isCash ? "rgba(16, 185, 129, 0.15)" : "rgba(56, 189, 248, 0.15)"}; color: ${order.isCash ? "#10b981" : "#0ea5e9"}; border: 1px solid ${order.isCash ? "#10b981" : "#38bdf8"};">
+            <span style="font-size: 14px; font-weight: bold; padding: 2px 8px; border-radius: 12px; background-color: ${order.isCash ? "rgba(16, 185, 129, 0.15)" : "rgba(56, 189, 248, 0.15)"}; color: ${order.isCash ? "#10b981" : "#0ea5e9"}; border: 1px solid ${order.isCash ? "#10b981" : "#38bdf8"};">
               ${order.isCash ? "💵 Cash" : "💳 Credit"}
             </span>
             ${order.isPriority ? '<span style="font-size:14px;" title="Running Late">⚠️</span>' : ""}

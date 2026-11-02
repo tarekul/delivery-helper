@@ -95,7 +95,7 @@ async function processWithCloudOCR(base64Image) {
     );
     const address = addressMatch
       ? addressMatch[1]
-          .replace(/\bFLR?\.?\s*\d*\b/gi, "")
+          .replace(/\b(?:FLR?|APT)\.?\s*\d*[a-zA-Z]?\b/gi, "")
           .replace(/\s+/g, " ")
           .trim()
       : "Address not found";
